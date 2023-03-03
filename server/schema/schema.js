@@ -9,6 +9,13 @@ const {
     GraphQLSchema,
 } = graphql;
 
+//Dummy data
+let users = [
+    { id: '1', name: 'John', email: 'j@email.com', password: '123', city: 'London' },
+    { id: '2', name: 'Jane', email: 'jane@email.com', password: '123', city: 'Sourbone' },
+    { id: '3', name: 'Jack', email: 'jack@email.com', password: '123', city: 'Titanic' },
+];
+ 
 //Create types
 
 //UserType
@@ -57,7 +64,7 @@ const RootQuery = new GraphQLObjectType({
             },
 
             resolve(parent, args) {
-                
+                return users.find(user => user.id === args.id);
             }
         }
     }
