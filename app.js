@@ -14,7 +14,7 @@ app.use(
 	}),
 );
 mongoose.connect(
-    `mongodb+srv://alankazam:${process.env.mongoUserPassword}@cluster0.hjcuf3m.mongodb.net/${process.env.mongoDatabase}?retryWrites=true&w=majority`,
+    `mongodb+srv://alankazam:${process.env.mongoUserPassword}@cluster0.hjcuf3m.mongodb.net/airbnbDB?retryWrites=true&w=majority`,
     { useNewUrlParser: true, useUnifiedTopology: true },
 ).then(() => {
 

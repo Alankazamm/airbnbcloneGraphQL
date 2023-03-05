@@ -1,8 +1,9 @@
 const graphql = require("graphql");
-
+const User = require('../model/user');
+const Lodge = require('../model/lodge');
+const Host = require('../model/host');
 const {
 	GraphQLObjectType,
-	GraphQLID,
 	GraphQLString,
 	GraphQLInt,
 	GraphQLBoolean,
@@ -233,14 +234,13 @@ const Mutation = new GraphQLObjectType({
 			resolve(parent, args) {
 				//create an id random and unique
 				let id = Math.floor(Math.random() * 1000);
-				let user = {
-					id,
+				let user = User({
 					name: args.name,
 					email: args.email,
 					password: args.password,
 					city: args.city,
-				};
-				return user;
+				});
+				return user.save();
 			},
 		},
 		createLodge: {
@@ -259,9 +259,9 @@ const Mutation = new GraphQLObjectType({
 				hostId: { type: GraphQLString },
 			},
 			resolve(parent, args) {
-				let id = Math.floor(Math.random() * 1000);
-				let lodge = {
-					id,
+				
+				let lodge = Lodge({
+					
 					title: args.title,
 					typeOfInn: args.typeOfInn,
 					rooms: {
@@ -275,8 +275,8 @@ const Mutation = new GraphQLObjectType({
 					rating: args.rating,
 					avaliability: args.avaliability,
 					hostId: args.hostId,
-				};
-				return lodge;
+				});
+				return lodge.save();
 			},
 		},
 
@@ -288,14 +288,14 @@ const Mutation = new GraphQLObjectType({
 				superHost: { type: GraphQLBoolean },
 			},
 			resolve(parent, args) {
-				let id = Math.floor(Math.random() * 1000).toString();
-				let host = {
-					id,
+				
+				let host = Host({
+					
 					name: args.name,
 					rating: args.rating,
 					superHost: args.superHost,
-				};
-				return host;
+				});
+				return host.save();
 			},
 		},
 	}),
