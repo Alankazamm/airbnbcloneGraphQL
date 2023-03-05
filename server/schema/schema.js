@@ -124,10 +124,12 @@ const LodgeType = new GraphQLObjectType({
 		country: { type: GraphQLString },
 		rating: { type: GraphQLFloat },
 		avaliability: { type: GraphQLBoolean },
+		hostId: { type: GraphQLID },
 		host: {
 			type: HostType,
+			args: { hostId: { type: GraphQLID } },
 			resolve(parent, args) {
-				return hosts.find((host) => host.id === parent.hostId);
+				return Host.findById( args.hostId)
 			},
 		},
 	}),
@@ -146,7 +148,7 @@ const HostType = new GraphQLObjectType({
 		lodges: {
 			type: new GraphQLList(LodgeType),
 			resolve(parent, args) {
-				return lodges.filter((lodge) => lodge.hostId === parent.id);
+				return Lodge.find({hostId: parent.id});
 			},
 		},
 	}),
@@ -163,7 +165,7 @@ const RootQuery = new GraphQLObjectType({
 			},
 
 			resolve(parent, args) {
-				return users.find((user) => user.id === args.id);
+				return User.findById(args.id);
 			},
 		},
 
@@ -177,7 +179,7 @@ const RootQuery = new GraphQLObjectType({
 			},
 
 			resolve(parent, args) {
-				return lodges.find((lodge) => lodge.id === args.id);
+				return Lodge.findById(args.id);
 			},
 		},
 		host: {
@@ -186,7 +188,7 @@ const RootQuery = new GraphQLObjectType({
 				id: { type: GraphQLID },
 			},
 			resolve(parent, args) {
-				return hosts.find((host) => host.id === args.id);
+				return Host.findById(args.id);
 			},
 		},
 		//list of lodges by criteria
