@@ -127,9 +127,9 @@ const LodgeType = new GraphQLObjectType({
 		hostId: { type: GraphQLID },
 		host: {
 			type: HostType,
-			args: { hostId: { type: GraphQLID } },
+			
 			resolve(parent, args) {
-				return Host.findById( args.hostId)
+				return Host.findById( parent.hostId)
 			},
 		},
 	}),
