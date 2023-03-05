@@ -201,23 +201,45 @@ const RootQuery = new GraphQLObjectType({
 			},
 			resolve(parent, args) {
 				//filter by for each criteria as args are passed
-				let lodgesFiltered = lodges;
-				let filteredSuperHosts = [];
-				filteredSuperHosts = lodgesFiltered.filter((lodge) => {
-					let host = hosts.find((host) => host.id === lodge.hostId);
-					return host.superHost === args.superHost;
-				});
-				if (args.superHost !== undefined) lodgesFiltered = filteredSuperHosts;
-				if (args.title !== undefined)
-					lodgesFiltered = lodgesFiltered.filter(
-						(lodge) => lodge.title === args.title,
-					);
-				if (args.avaliability !== undefined)
-					lodgesFiltered = lodgesFiltered.filter(
-						(lodge) => lodge.avaliability === args.avaliability,
-					);
-				return lodgesFiltered;
+				
+				if (args.title !== undefined && args.avaliability !== undefined && args.superHost !== undefined) {
+					return Lodge.find({
+						title: args.title,
+						avaliability: args.avaliability,
+						hostId: args.superHost,
+					});
+				} else if (args.title !== undefined && args.avaliability !== undefined) {
+					return Lodge.find({
+						title: args.title,
+						avaliability: args.avaliability,
+					});
+				} else if (args.title !== undefined && args.superHost !== undefined) {
+					return Lodge.find({
+						title: args.title,
+						hostId: args.superHost,
+					});
+				} else if (args.avaliability !== undefined && args.superHost !== undefined) {
+					return Lodge.find({
+						avaliability: args.avaliability,
+						hostId: args.superHost,
+					});
+				} else if (args.title !== undefined) {
+					return Lodge.find({
+						title: args.title,
+					});
+				} else if (args.avaliability !== undefined) {
+					return Lodge.find({
+						avaliability: args.avaliability,
+					});
+				} else if (args.superHost !== undefined) {
+					return Lodge.find({
+						hostId: args.superHost,
+					});
+				} else {
+					return Lodge.find({});
+				}
 			},
+				
 		},
 	},
 });
