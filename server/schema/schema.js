@@ -6,6 +6,7 @@ const {
 	GraphQLObjectType,
 	GraphQLString,
 	GraphQLInt,
+	GraphQLID,
 	GraphQLBoolean,
 	GraphQLSchema,
 	GraphQLFloat,
@@ -90,7 +91,7 @@ const UserType = new GraphQLObjectType({
 	description:
 		"Normal customer for the app, after register password, email and password for login, city for future geolocation distances implementation and name for identification.",
 	fields: () => ({
-		id: { type: GraphQLString },
+		id: { type: GraphQLID },
 		name: { type: GraphQLString },
 		email: { type: GraphQLString },
 		password: { type: GraphQLString },
@@ -104,7 +105,7 @@ const LodgeType = new GraphQLObjectType({
 	description:
 		"It fetches the lodge location(city and country), if the host is or not SuperHost, the type of lodge(apartment, private room, etc..) maxNumber of guests, the title for advertisement, it's avaliability and their rooms.",
 	fields: () => ({
-		id: { type: GraphQLString },
+		id: { type: GraphQLID },
 		title: { type: GraphQLString },
 		typeOfInn: { type: GraphQLString },
 		rooms: {
@@ -138,7 +139,7 @@ const HostType = new GraphQLObjectType({
 	description:
 		"Host information, that contains the identifier for relationship with the lodges, and if it is a superhost",
 	fields: () => ({
-		id: { type: GraphQLString },
+		id: { type: GraphQLID },
 		name: { type: GraphQLString },
 		rating: { type: GraphQLFloat },
 		superHost: { type: GraphQLBoolean },
@@ -158,7 +159,7 @@ const RootQuery = new GraphQLObjectType({
 		user: {
 			type: UserType,
 			args: {
-				id: { type: GraphQLString },
+				id: { type: GraphQLID },
 			},
 
 			resolve(parent, args) {
@@ -169,7 +170,7 @@ const RootQuery = new GraphQLObjectType({
 		lodge: {
 			type: LodgeType,
 			args: {
-				id: { type: GraphQLString },
+				id: { type: GraphQLID },
 				// title: { type: GraphQLString },
 				// avaliability: { type: GraphQLBoolean },
 				// superHost: { type: GraphQLBoolean },
@@ -182,7 +183,7 @@ const RootQuery = new GraphQLObjectType({
 		host: {
 			type: HostType,
 			args: {
-				id: { type: GraphQLString },
+				id: { type: GraphQLID },
 			},
 			resolve(parent, args) {
 				return hosts.find((host) => host.id === args.id);
@@ -256,7 +257,7 @@ const Mutation = new GraphQLObjectType({
 				country: { type: GraphQLString },
 				rating: { type: GraphQLFloat },
 				avaliability: { type: GraphQLBoolean },
-				hostId: { type: GraphQLString },
+				hostId: { type: GraphQLID },
 			},
 			resolve(parent, args) {
 				
