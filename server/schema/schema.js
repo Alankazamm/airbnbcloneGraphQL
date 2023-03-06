@@ -393,9 +393,33 @@ const Mutation = new GraphQLObjectType({
 				if (!removedUser) {
 					throw new ("Error")
 				}
-				return removedUser
+				return removedUser;
 			}
-		}
+		},
+		RemoveHost: {
+			type: HostType,
+			args: {
+				id: { type: GraphQLNonNull(GraphQLString)}
+			},
+			resolve(parent, args) {
+				let removedHost = Host.findByIdAndRemove(args.id).exec();
+				if (!removedHost) {
+					throw new ("Error");
+				}
+				return removedHost;
+			}
+		},
+		RemoveLodge: {
+			type: LodgeType,
+			args: { id: { type: GraphQLNonNull(GraphQLString) } },
+			resolve(parent, args) {
+				let removedLodge = Lodge.findByIdAndRemove(args.id).exec();
+				if (!removedHost) {
+					throw new ("Error");
+				}
+				return removedLodge;
+			}
+		},
 	}),
 });
 
