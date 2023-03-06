@@ -1,7 +1,7 @@
 const graphql = require("graphql");
-const User = require('../model/user');
-const Lodge = require('../model/lodge');
-const Host = require('../model/host');
+const User = require("../model/user");
+const Lodge = require("../model/lodge");
+const Host = require("../model/host");
 const {
 	GraphQLObjectType,
 	GraphQLString,
@@ -11,6 +11,7 @@ const {
 	GraphQLSchema,
 	GraphQLFloat,
 	GraphQLList,
+	GraphQLNonNull,
 } = graphql;
 
 //Dummy data
@@ -127,9 +128,9 @@ const LodgeType = new GraphQLObjectType({
 		hostId: { type: GraphQLID },
 		host: {
 			type: HostType,
-			
+
 			resolve(parent, args) {
-				return Host.findById( parent.hostId)
+				return Host.findById(parent.hostId);
 			},
 		},
 	}),
@@ -148,7 +149,7 @@ const HostType = new GraphQLObjectType({
 		lodges: {
 			type: new GraphQLList(LodgeType),
 			resolve(parent, args) {
-				return Lodge.find({hostId: parent.id});
+				return Lodge.find({ hostId: parent.id });
 			},
 		},
 	}),
@@ -197,49 +198,24 @@ const RootQuery = new GraphQLObjectType({
 			args: {
 				title: { type: GraphQLString },
 				avaliability: { type: GraphQLBoolean },
-				superHost: { type: GraphQLBoolean },
 			},
+
 			resolve(parent, args) {
 				//filter by for each criteria as args are passed
-				
-				if (args.title !== undefined && args.avaliability !== undefined && args.superHost !== undefined) {
+
+				if (args.title !== undefined && args.avaliability !== undefined) {
 					return Lodge.find({
 						title: args.title,
 						avaliability: args.avaliability,
-						hostId: args.superHost,
-					});
-				} else if (args.title !== undefined && args.avaliability !== undefined) {
-					return Lodge.find({
-						title: args.title,
-						avaliability: args.avaliability,
-					});
-				} else if (args.title !== undefined && args.superHost !== undefined) {
-					return Lodge.find({
-						title: args.title,
-						hostId: args.superHost,
-					});
-				} else if (args.avaliability !== undefined && args.superHost !== undefined) {
-					return Lodge.find({
-						avaliability: args.avaliability,
-						hostId: args.superHost,
 					});
 				} else if (args.title !== undefined) {
-					return Lodge.find({
-						title: args.title,
-					});
+					return Lodge.find({ title: args.title });
 				} else if (args.avaliability !== undefined) {
-					return Lodge.find({
-						avaliability: args.avaliability,
-					});
-				} else if (args.superHost !== undefined) {
-					return Lodge.find({
-						hostId: args.superHost,
-					});
+					return Lodge.find({ avaliability: args.avaliability });
 				} else {
 					return Lodge.find({});
 				}
 			},
-				
 		},
 	},
 });
@@ -248,7 +224,7 @@ const Mutation = new GraphQLObjectType({
 	name: "Mutation",
 	description: "manipulates data...",
 	fields: () => ({
-		createUser: {
+		CreateUser: {
 			type: UserType,
 			args: {
 				name: { type: GraphQLString },
@@ -268,7 +244,7 @@ const Mutation = new GraphQLObjectType({
 				return user.save();
 			},
 		},
-		createLodge: {
+		CreateLodge: {
 			type: LodgeType,
 			args: {
 				title: { type: GraphQLString },
@@ -284,9 +260,7 @@ const Mutation = new GraphQLObjectType({
 				hostId: { type: GraphQLID },
 			},
 			resolve(parent, args) {
-				
 				let lodge = Lodge({
-					
 					title: args.title,
 					typeOfInn: args.typeOfInn,
 					rooms: {
@@ -305,7 +279,7 @@ const Mutation = new GraphQLObjectType({
 			},
 		},
 
-		createHost: {
+		CreateHost: {
 			type: HostType,
 			args: {
 				name: { type: GraphQLString },
@@ -313,15 +287,39 @@ const Mutation = new GraphQLObjectType({
 				superHost: { type: GraphQLBoolean },
 			},
 			resolve(parent, args) {
-				
 				let host = Host({
-					
 					name: args.name,
 					rating: args.rating,
 					superHost: args.superHost,
 				});
 				return host.save();
 			},
+		},
+		//updating datas
+		UpdateUser: {
+			type: UserType,
+			args: {
+				id: { type: GraphQLNonNull(GraphQLString)},
+				name: { type: GraphQLNonNull(GraphQLString) },
+				email: { type: GraphQLNonNull(GraphQLString) },
+				password: { type: GraphQLNonNull(GraphQLString) },
+				city: { type: GraphQLNonNull(GraphQLString)},
+			},
+			resolve(parent, args) {
+				return updatedUser = User.findByIdAndUpdate(
+					args.id,
+					{
+						$set:{
+							name: args.name,
+							email: args.email,
+							password: args.password,
+							city: args.city,
+						}
+					},
+					{new: true}
+				)
+				
+			}
 		},
 	}),
 });
