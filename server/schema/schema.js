@@ -379,6 +379,22 @@ const Mutation = new GraphQLObjectType({
 					{new: true},
 				)
 			}
+		},
+		//deleting datas
+		RemoveUser: {
+			type: UserType,
+			args: {
+				id: { type: GraphQLNonNull(GraphQLString) }
+			},
+			resolve(parent, args) {
+				let removedUser = User.findByIdAndRemove(
+					args.id
+				).exec();
+				if (!removedUser) {
+					throw new ("Error")
+				}
+				return removedUser
+			}
 		}
 	}),
 });
