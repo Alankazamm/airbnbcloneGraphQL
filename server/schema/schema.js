@@ -318,9 +318,68 @@ const Mutation = new GraphQLObjectType({
 					},
 					{new: true}
 				)
-				
 			}
 		},
+		UpdateHost: {
+			type: HostType,
+			args: {
+				id: { type: GraphQLNonNull(GraphQLString) },
+				name: { type: GraphQLString },
+				rating: { type: GraphQLFloat },
+				superHost: { type: GraphQLBoolean },
+			},
+			resolve(parent, args) {
+				return updatedHost = Host.findByIdAndUpdate(
+					args.id,
+					{
+						$set: {
+							name: args.name,
+							rating: args.rating,
+							superHost: args.superHost,
+						}
+					},
+					{new: true},
+				)	
+			}
+		},
+		UpdateLodge: {
+			type: LodgeType,
+			args: {
+				id: { type: GraphQLNonNull(GraphQLString)},
+				title: { type: GraphQLNonNull(GraphQLString) },
+				typeOfInn: { type: GraphQLNonNull(GraphQLString) },
+				rooms: { type: GraphQLNonNull(GraphQLInt) },
+				beds: { type: GraphQLNonNull(GraphQLInt) },
+				bathRooms: { type: GraphQLNonNull(GraphQLInt) },
+				maxGuests: { type: GraphQLNonNull(GraphQLInt) },
+				city: { type: GraphQLNonNull(GraphQLString) },
+				country: { type: GraphQLNonNull(GraphQLString) },
+				rating: { type: GraphQLNonNull(GraphQLFloat) },
+				avaliability: { type: GraphQLNonNull(GraphQLBoolean) },
+				hostId: { type: GraphQLNonNull(GraphQLID) },
+			},
+			resolve(parent, args) {
+				return updatedLodge = Lodge.findByIdAndUpdate(
+					args.id,
+					{
+						$set: {
+							title: args.title,
+							typeOfInn: args.typeOfInn,
+							rooms: args.rooms,
+							beds: args.beds,
+							bathRooms: args.bathRooms,
+							maxGuests: args.maxGuests,
+							city: args.city,
+							country: args.country,
+							rating: args.rating,
+							avaliability: args.avaliability,
+							hostId: args.hostId,
+						}
+					},
+					{new: true},
+				)
+			}
+		}
 	}),
 });
 
